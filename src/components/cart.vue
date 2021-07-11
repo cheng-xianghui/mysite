@@ -1,6 +1,36 @@
 <template>
     <div>
         <h2>{{title}}</h2>
+         <el-table
+    ref="multipleTable"
+    :data="cart"
+    border
+    tooltip-effect="dark"
+    style="width: 100%"
+    @selection-change="handleSelectionChange">
+    <el-table-column
+      type="selection" width="55">
+    </el-table-column>
+    <el-table-column
+      prop="title" label="课程" width="120">
+    </el-table-column>
+    <el-table-column
+      prop="price" label="单价" width="120">
+    </el-table-column>
+    <el-table-column
+      label="数量" width="220">
+      <template slot-scope="scope">
+          <el-input-number v-model="scope.row.count"  :min="1" :max="100" label="描述文字"></el-input-number>
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="total" label="总价" width="120">
+       <template slot-scope="scope">
+         {{scope.row.count*scope.row.price}}
+      </template>
+    </el-table-column>
+    
+  </el-table>
         <table border="1">
             <tr>
                 <th>#</th>
@@ -39,7 +69,8 @@ export default {
        return {
           
         //   JSON.parse（）：将数据转化为javascript对象  getItem:获得记录 
-           cart:JSON.parse(localStorage.getItem('cart')) || []
+           cart:JSON.parse(localStorage.getItem('cart')) || [],
+           multipleSelection:[]
        } 
     },
     watch:{
@@ -67,6 +98,19 @@ export default {
         })
     },
     methods:{
+         toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.multipleTable.clearSelection();
+        }
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      }
+    ,
         setLocalData(n){
             //setItem:设置记录   localStorage:本地存储  JSON.stringify(n)将json值转化为字符串
             console.log(n);
@@ -92,7 +136,7 @@ export default {
             return this.cart.length
         },
         activeCount(){
-            return this.cart.filter(v=>v.active).length
+            return this.multipleSelection.filter(v=>v.active).length
         },
         total(){
             // 方法一:foreach()方法用于调用数组的每个元素，并将元素传递给回调函数

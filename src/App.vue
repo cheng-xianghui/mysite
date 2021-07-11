@@ -7,16 +7,19 @@
     <li v-for='(item,index) in cartList' :key='item.id'>
       <h2>{{item.title}}</h2>
       <p>￥{{item.price}}</p>
-      <button @click="AddCart(index)">添加购物车</button>
+      <el-button @click="AddCart(index)" type="success">添加购物车</el-button>
     </li>
     </ul>
     <my-cart  :title='title'></my-cart>
+    <form-element></form-element>
   </div>
   
 </template>
 
 <script>
-import MyCart from './components/cart'
+import MyCart from './components/cart';
+import FormElement from './components/FormElement.vue';
+
 
 export default {
   name: 'app',
@@ -52,7 +55,8 @@ export default {
  
 },
   components: {
-    MyCart
+    MyCart,
+    FormElement
   }
 }
 </script>
